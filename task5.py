@@ -7,30 +7,13 @@ class Field():
         self.x = x
         self.y = y
         self.text_id = None
-
-def create_game():
-    return [[choice([0, 1, 2, 3, 4]) for i in range(n)] for j in range(n)]
-
-def create_board():
-    return [[None for i in range(n + 2)] for j in range(n + 2)]        
-
 n = 20
-board = create_board()
-game = create_game()
+
+cur_start = Field(choice(range(0, n)), choice(range(0, n)))
+cur_exit = Field(choice(range(0, n)), choice(range(0, n)))
 
 
-def gen_good():
-    while True:
-        x = choice(range(n))
-        y = choice(range(n))
-        if game[x][y] != 4:
-            return Field(x, y)
-
-cur_start = gen_good()
-cur_exit = gen_good()
-
-
-arrows = ['\u2190', '\u2191', '\u2192', '\u2193', '\u224b'] # left, up, right, down, sea
+arrows = ['\u2190', '\u2191', '\u2192', '\u2193'] # left, up, right, down
 
 font = 'Arial 18'
 
@@ -55,10 +38,11 @@ def get_fields(x, y):
         ans.append((x + n, y + n))
     return ans
 
-def get_color(arrow_type):
-    return '#90EE90' if arrow_type != 4 else 'blue'
+def create_game():
+    return [[choice([0, 1, 2, 3]) for i in range(n)] for j in range(n)]
 
-
+def create_board():
+    return [[None for i in range(n + 2)] for j in range(n + 2)]
 
 def fx():
     if game[cur_start.x][cur_start.y] == 0:
@@ -95,23 +79,13 @@ def repaint(event):
         cur_start.y = (cur_start.y - 1) % n
     if (event.keycode == 40):
         cur_start.y = (cur_start.y + 1) % n
-
-    if check_lose():
-        show_lose_message()
-        exit()
     if check_win():
         show_win_message()
         exit()
-
-
     if (37 <= event.keycode <=40):
         cur_exit.x = (cur_exit.x + fx()) % n
         cur_exit.y = (cur_exit.y + fy()) % n
         repaint_board()
-
-    if check_lose():
-        show_lose_message()
-        exit()       
 
     if check_win():
         show_win_message()
@@ -124,16 +98,8 @@ def check_win():
         print('Win')
     return cur_exit.x == cur_start.x and cur_exit.y == cur_start.y
 
-def check_lose():
-    if game[cur_exit.x][cur_exit.y] == 4 or game[cur_start.x][cur_start.y] == 4:
-        print('Lose!')
-    return game[cur_exit.x][cur_exit.y] == 4 or game[cur_start.x][cur_start.y] == 4
-
 def show_win_message():
     pass
-
-def show_lose_message():
-    pass    
 
 def paint_arrow_field(x, y):
     fields = get_fields(x, y)
@@ -143,22 +109,19 @@ def paint_arrow_field(x, y):
 def paint_start_field():
     fields = get_fields(cur_start.x, cur_start.y)
     cur_start.text_id = [canv.create_text(30 * f_x + 15, 30 * f_y + 15, text = "\u2655", font = font) for f_x, f_y in fields]
-    cur_start.text_id.extend(canv.create_rectangle(30 * f_x + 2, 30 * f_y + 2, 30 + 30 * f_x - 2, 30 + 30 * f_y - 2, width = 5, outline ='black') 
-                        for f_x, f_y in fields)
 
 def paint_exit_field():   
     fields = get_fields(cur_exit.x, cur_exit.y)
-    cur_exit.text_id = [canv.create_rectangle(30 * f_x + 2, 30 * f_y + 2, 30 + 30 * f_x - 2, 30 + 30 * f_y - 2, width = 5, outline ='red') 
+    cur_exit.text_id = [canv.create_rectangle(30 * f_x, 30 * f_y, 30 + 30 * f_x, 30 + 30 * f_y, width = 5, outline ='red') 
                         for f_x, f_y in fields]
-
 
 def paint():
     for i in range(n + 2):
         for j in range(n + 2):
-            if (i == 0 or j == 0 or i == n + 1 or j == n + 1):
+            if (i == 0 or j == 0 or i == n+1 or j == n + 1):
                 canv.create_rectangle(i * 30, j * 30, i * 30 + 30, j * 30 + 30, fill = '#C0C0C0')
             else:
-                canv.create_rectangle(i * 30, j * 30, i * 30 + 30, j * 30 + 30, fill = get_color(game[i % n][j % n]))
+                canv.create_rectangle(i * 30, j * 30, i * 30 + 30, j * 30 + 30, fill = '#90EE90')
 
     for i in range(n):
         for j in range(n):
@@ -178,7 +141,8 @@ def repaint_board():
     paint_exit_field()
    
   
-
+board = create_board()
+game = create_game()
 paint()
 root.bind("<KeyPress>", repaint)
 root.mainloop()
