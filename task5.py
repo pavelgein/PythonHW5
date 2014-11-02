@@ -41,7 +41,7 @@ def gen_good():
     while True:
         x = choice(range(width))
         y = choice(range(height))
-        if game[x][y] != 4 and not Field(x, y) in players:
+        if game[x][y] != 4 and not Player(Field(x, y)) in players:
             return Field(x, y)
 
 players = [Player(field = gen_good(), char = str(i + 1), name = str(i + 1), pl_id = i + 1) for i in range(number_players)]
