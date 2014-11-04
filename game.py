@@ -26,7 +26,7 @@ class Player(Field):
 
 
 class Game():
-    def __init__(self, number_players = 2, names = ['1', '2'], height = 10, width = 10, size_cell = 30):
+    def __init__(self, number_players = 2, names = ['1', '2'], height = 10, width = 20, size_cell = 30):
         self.height = height
         self.width = width
         self.size_cell = 30
@@ -53,10 +53,10 @@ class Game():
             if self.game[x][y] != 4 and not Player(Field(x, y)) in self.players:
                 return Field(x, y)
     def create_game(self):
-        return [[choice(range(3)) for i in range(self.width)] for j in range(self.height)]
+        return [[choice(range(3)) for i in range(self.height)] for j in range(self.width)]
 
     def create_board(self):
-        return [[None for i in range(self.width + 2)] for j in range(self.height + 2)]    
+        return [[None for i in range(self.height + 2)] for j in range(self.width + 2)]    
 
     def init_graphics(self):
         s = str((self.width + 2) * self.size_cell) + 'x' + str((self.height + 2) * self.size_cell)        
