@@ -72,11 +72,11 @@ class Game():
         x %= self.width
         y %= self.height
         ans = [(x, y)]
-        if x <= 0:
+        if x <= 1:
             ans.append((x + self.width, y))
-        if y <= 0:
+        if y <= 1:
             ans.append((x, y + self.height))
-        if x <= 0 and y <= 0:
+        if x <= 1 and y <= 1:
             ans.append((x + self.width, y + self.height))
         return ans
 
