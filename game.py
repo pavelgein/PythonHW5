@@ -26,7 +26,7 @@ class Player(Field):
 
 
 class Game():
-    def __init__(self, number_players = 2, names = ['1', '2'], height = 10, width = 20, size_cell = 30):
+    def __init__(self, number_players = 2, names = ['1', '2'], height = 3, width = 30, size_cell = 30):
         self.height = height
         self.width = width
         self.size_cell = 30
@@ -50,13 +50,13 @@ class Game():
         while True:
             x = choice(range(self.width))
             y = choice(range(self.height))
-            if self.game[x][y] != 4 and not Player(Field(x, y)) in self.players:
+            if self.game[y][x] != 4 and not Player(Field(x, y)) in self.players:
                 return Field(x, y)
     def create_game(self):
-        return [[choice(range(3)) for i in range(self.height)] for j in range(self.width)]
+        return [[choice(range(3)) for i in range(self.width)] for j in range(self.height)]
 
     def create_board(self):
-        return [[None for i in range(self.height + 2)] for j in range(self.width + 2)]    
+        return [[None for i in range(self.width + 2)] for j in range(self.height + 2)]    
 
     def init_graphics(self):
         s = str((self.width + 2) * self.size_cell) + 'x' + str((self.height + 2) * self.size_cell)        
@@ -69,32 +69,32 @@ class Game():
         return root, canv
 
     def get_fields(self, x, y):
-        x %= self.height
-        y %= self.width
+        x %= self.width
+        y %= self.height
         ans = [(x, y)]
-        if x <= 1:
+        if x <= 0:
             ans.append((x + self.width, y))
-        if y <= 1:
+        if y <= 0:
             ans.append((x, y + self.height))
-        if x <= 1 and y <= 1:
+        if x <= 0 and y <= 0:
             ans.append((x + self.width, y + self.height))
         return ans
 
     def fx(self, field):
-        if self.game[field.x][field.y] == 0:
+        if self.game[field.y][field.x] == 0:
             return -1
-        if self.game[field.x][field.y] == 2:
+        if self.game[field.y][field.x] == 2:
             return 1
         return 0
 
     def fy(self, field):
-        if self.game[field.x][field.y] == 3:
+        if self.game[field.y][field.x] == 3:
             return 1
-        if self.game[field.x][field.y] == 1:
+        if self.game[field.y][field.x] == 1:
             return -1
         return 0
 
-    def empty_cell(self, x,y):
+    def empty_cell(self, x, y):
         return all(x != player.x or y != player.y for player in self.players)
 
     def start(self):
@@ -110,15 +110,15 @@ class Game():
         for f_x, f_y in fields:
             if sea:
                 self.paint_cell(f_x, f_y, 4)
-                self.game[cur_player.x][cur_player.y] = 4
+                self.game[cur_player.y][cur_player.x] = 4
             else:
-                self.paint_cell(f_x, f_y, self.game[(f_x - 1) % self.width][(f_y - 1) % self.height])
+                self.paint_cell(f_x, f_y, self.game[(f_y - 1) % self.width][(f_x - 1) % self.height])
 
 
     def repaint(self, event):
         cur_player = self.players[self.current_player[0]]
-        target_x = (cur_player.x + dx(event.keycode)) % self.height
-        target_y = (cur_player.y + dy(event.keycode)) % self.width
+        target_x = (cur_player.x + dx(event.keycode)) % self.width
+        target_y = (cur_player.y + dy(event.keycode)) % self.height
         if (37 <= event.keycode <=40):        
             if self.empty_cell(target_x, target_y):
                 self.repaint_cell()
@@ -128,7 +128,6 @@ class Game():
                 return
                 
             self.paint_all_start_field()
-           
             if self.check_lose():
                 show_lose_message()
                 exit()
@@ -168,7 +167,7 @@ class Game():
 
     def check_lose(self):
         for player in self.players:
-            if self.game[self.cur_exit.x][self.cur_exit.y] == 4 or self.game[player.x][player.y] == 4:
+            if self.game[self.cur_exit.y][self.cur_exit.x] == 4 or self.game[player.y][player.x] == 4:
                 print('Lose!'),
                 print(player.name)
                 return player.id
@@ -185,7 +184,7 @@ class Game():
         else:
             self.canv.create_rectangle(self.size_cell * x, self.size_cell * y, self.size_cell + self.size_cell * x, self.size_cell + self.size_cell * y, 
                                        fill = backgrounds[z])
-        self.board[x][y] = self.canv.create_text(self.size_cell * x + self.size_cell / 2, self.size_cell * y + self.size_cell / 2, text = arrows[z], font = self.font) 
+        self.board[y][x] = self.canv.create_text(self.size_cell * x + self.size_cell / 2, self.size_cell * y + self.size_cell / 2, text = arrows[z], font = self.font) 
 
     def paint_all_start_field(self):
         for player in self.players:
@@ -194,7 +193,7 @@ class Game():
     def paint_start_field(self, player):
         fields = self.get_fields(player.x + 1, player.y + 1)
         for f_x, f_y in fields:
-            self.canv.delete(self.board[f_x][f_y]) # удаляем стрелку на месте нашего положения
+            self.canv.delete(self.board[f_y][f_x]) # удаляем стрелку на месте нашего положения
         player.text_id = [self.canv.create_text(self.size_cell * f_x + self.size_cell / 2,
                                                 self.size_cell * f_y + self.size_cell / 2, 
                                                 text = player.char, font = self.font) for f_x, f_y in fields]
@@ -209,7 +208,7 @@ class Game():
     def first_paint(self):
         for i in range(self.width + 2):
             for j in range(self.height + 2):
-               self.paint_cell(i, j, self.game[(i - 1) % self.width][(j - 1) % self.height])
+               self.paint_cell(i, j, self.game[(j - 1) % self.height][(i - 1) % self.width])
         self.paint_all_start_field()
         fields = self.get_fields(self.players[self.current_player[0]].x + 1, self.players[self.current_player[0]].y + 1)
         self.players[self.current_player[0]].text_id.extend(self.canv.create_rectangle(self.size_cell * f_x + 2, self.size_cell * f_y + 2,
