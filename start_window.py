@@ -1,5 +1,6 @@
 import tkinter as tk
-from game import Game
+# from game import Game
+from tkgame import TkGame
 
 
 class StartWindow(tk.Frame):
@@ -10,13 +11,12 @@ class StartWindow(tk.Frame):
 		# self.field = None
 		# self.finish_report = None
 		self.create_widgets()
+
 		
 	def create_widgets(self):
 		self.HEIGHT, self.HEIGHT_WIDGET = self.create_entry_widget("20", "Height")
 		self.WIDTH, self.WIDTH_WIDGET = self.create_entry_widget("20", "Width")
-		self.NUMBER, self.NUMBER_WIDGET = self.create_entry_widget(
-										"2", 
-										"Number of players")
+		self.NUMBER, self.NUMBER_WIDGET = self.create_entry_widget("2", "Number of players")
 		
 		self.NEW = tk.Button(self, text="New Game", command=self.start_game)
 		self.NEW.pack(side="left")
@@ -34,12 +34,17 @@ class StartWindow(tk.Frame):
 		return widget_text, widget
 
 	def start_game(self):
-		game = Game(height = int(self.HEIGHT.get()), 
+		number = int(self.NUMBER.get())
+		if number != 1 and number != 2:
+			return 
+		game = TkGame(height = int(self.HEIGHT.get()), 
 			 	    width = int(self.WIDTH.get()), 
 					number_players = int(self.NUMBER.get()))
 		self.master.destroy()
+
 		game.start()
 	def start(self):
+		self.master.title = 'Догони!'
 		self.mainloop()		
 # StartWindow(master=tk.Tk()).mainloop()
 
