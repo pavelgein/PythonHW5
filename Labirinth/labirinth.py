@@ -56,7 +56,7 @@ class Labirinth:
 	@staticmethod
 	def count_difference(a1, a2, b):
 		if a1 == a2:
-			return 0
+			return choice([-1, 1])
 
 		diff1 = (a2 - a1) % b
 		diff2 = (b - diff1) % b
@@ -65,7 +65,7 @@ class Labirinth:
 		elif diff1 < diff2:
 			return 1
 		else:
-			return choice([-1, 1, 0])
+			return 0
 	
 	def move_exit(self):
 		i0, j0 = self.player
@@ -82,3 +82,78 @@ class Labirinth:
 	def finish(self):
 		return self.player == self.exit
 
+class VertLabirinth(Labirinth):
+	def generate_field(self):
+		self.walls = [choice(range(self.height)) for i in range(self.width)]
+		self.ways = [choice(range(self.height)) for i in range(self.width)]
+
+	def wall_under(self, i, j):
+		return (i + 1) % self.height == self.walls[j]
+
+	def wall_over(self, i, j):
+		return i == self.walls[j]
+
+	def wall_right_to(self, i, j):
+		return i != self.ways[(j + 1) % self.width]
+
+	def wall_left_to(self, i, j):
+		return i != self.ways[j]
+	
+	# def move_exit(self):
+	# 	i0, j0 = self.player
+	# 	i1, j1 = self.exit
+	# 	move = self.count_difference(j0, j1, self.width)
+	# 	self.exit[1] = (self.exit[1] + move) % self.width
+	# 	return self.exit
+
+class VertHorLabirinth(Labirinth):
+	def generate_field(self):
+		# True - vertical
+		# False - horisontal
+		self.vertical = choice([True, False])
+		if (self.vertical):
+			n, m = self.width, self.height
+		else:
+			n, m = self.height, self.width
+		self.walls = [choice(range(self.height)) for i in range(self.width)]
+		self.ways = [choice(range(self.height)) for i in range(self.width)]
+
+	def wall_under(self, i, j):
+		if self.vertical:
+			return (i + 1) % self.height == self.walls[j]
+		else:
+			return j != self.ways[(i + 1) % self.height]
+
+	def wall_over(self, i, j):
+		if self.vertical:
+			return i == self.walls[j]
+		else:
+			return j != self.ways[i]
+
+	def wall_right_to(self, i, j):
+		if self.vertical:
+			return i != self.ways[(j + 1) % self.width]
+		else:
+			return (j + 1) % self.width == self.walls[i]
+
+	def wall_left_to(self, i, j):
+		if self.vertical:
+			return i != self.ways[j]
+		else:
+			return j == self.walls[i]
+
+class EmptyLabirinth(Labirinth):
+	def generate_field(self):
+		pass
+
+	def wall_under(self, i, j):
+		return False
+
+	def wall_over(self, i, j):
+		return False
+
+	def wall_right_to(self, i, j):
+		return False
+
+	def wall_left_to(self, i, j):
+		return False
