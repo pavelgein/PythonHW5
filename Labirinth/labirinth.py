@@ -79,6 +79,16 @@ class Labirinth:
 		
 		return self.exit
 
+	def move_exit2(self):
+		while True:
+			direction = choice(['up', 'left', 'right', 'down'])
+			move = self.move_smth(self.exit, direction)
+			if move != None:
+				break
+
+		self.exit = move
+		return self.exit
+
 	def finish(self):
 		return self.player == self.exit
 

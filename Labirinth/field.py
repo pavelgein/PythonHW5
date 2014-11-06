@@ -97,7 +97,7 @@ class Field:
 				self.parrent.end_game()				
 
 	def move_exit(self):
-		new_exit = self.labirinth.move_exit()
+		new_exit = self.labirinth.move_exit2()
 		if new_exit:
 			self.field.delete(self.exit_figure)			
 			self.exit_figure = self.print_exit()
