@@ -2,7 +2,7 @@ import tkinter as tk
 from . import game2 as game
 from .messages import Message
 
-sea = 1
+
 
 arrows = ['\u2190', '\u2191', '\u2192', '\u2193', '\u224b'] # left, up, right, down, sea
 backgrounds = ['#90EE90', '#90EE90', '#90EE90', '#90EE90', 'blue'] # left, up, right, down, sea
@@ -21,8 +21,8 @@ class TkPlayer(game.Player):
 		self.text_id = text_id
 
 class TkGame(game.Game):
-    def __init__(self, number_players = 2, names = ['1', '2'], height = 3, width = 30, size_cell = 30):
-        super(TkGame, self).__init__(number_players, names, height, width)
+    def __init__(self, number_players = 2, names = ['\u2121', '2'], chars=['\u2121', '2'], height = 3, width = 30, size_cell = 30, sea = 1):
+        super(TkGame, self).__init__(number_players, names, chars, height, width,sea)
         self.size_cell = size_cell
         self.font = 'Arial '+ str(int(0.6 * size_cell))
         self.window, self.canv = self.init_graphics()
@@ -52,12 +52,8 @@ class TkGame(game.Game):
             self.canv.delete(text_id)
         fields = self.get_fields(cur_player.x + 1, cur_player.y + 1)
         for f_x, f_y in fields:
-            if sea:
-                self.paint_cell(f_x, f_y, 4)
-                self.game[cur_player.y][cur_player.x] = 4
-            else:
-                self.paint_cell(f_x, f_y, self.game[(f_y - 1) % self.width][(f_x - 1) % self.height])
-
+            self.paint_cell(f_x, f_y, 4)
+            self.game[cur_player.y][cur_player.x] = 4
 
     def repaint(self, event):
         
@@ -89,14 +85,14 @@ class TkGame(game.Game):
             if self.check_lose():
                 self.window.destroy()
                 if self.number_players == 1:
-                    show_lose_message(cur_player)
+                    show_lose_message(self.players[(cur_player.id + 1 ) % 2])
                 else: 
                     show_win_message(self.players[(cur_player.id + 1 ) % 2])
                 exit()
                 
             if self.check_win():
                 self.window.destroy()
-                show_win_message(cur_player)
+                show_win_message(self.players[(cur_player.id + 1 ) % 2])
                 exit()
 
             self.set_next_player()

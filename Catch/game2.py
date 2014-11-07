@@ -2,13 +2,15 @@ import tkinter
 from tkinter import *
 from random import choice, sample
 from itertools import product
-from .messages import Message
+#from messages import Message
+# import tkgame
 
 
-sea = 1
 
 arrows = ['\u2190', '\u2191', '\u2192', '\u2193', '\u224b'] # left, up, right, down, sea
 backgrounds = ['#90EE90', '#90EE90', '#90EE90', '#90EE90', 'blue'] # left, up, right, down, sea
+
+char_for_player=['\u2655','\u265B']
 
 class Field():
     def __init__(self, x, y, text_id = None):
@@ -25,7 +27,8 @@ class Player():
 
 
 class Game():
-    def __init__(self, number_players = 2, names = ['1', '2'], height = 3, width = 30):
+    def __init__(self, number_players = 2, names = ['1', '2'], chars = ['1', '2'], height = 3, width = 30, sea = 0):
+        self.sea = sea
         self.height = height
         self.width = width
 
@@ -33,7 +36,7 @@ class Game():
         
         self.number_players = number_players
         self.players = []
-        self.players = [Player(field = self.gen_good(), char = str(i + 1), name = names[i], pl_id = i) for i in range(number_players)]
+        self.players = [Player(field = self.gen_good(), char = chars[i], name = names[i], pl_id = i) for i in range(number_players)]
         self.current_player = self.players[0]
 
         self.cur_exit = self.gen_good()
@@ -55,7 +58,11 @@ class Game():
     
 
     def create_game(self):
-        return [[choice(range(3)) for i in range(self.width)] for j in range(self.height)]
+        if self.sea:
+            return [[choice(range(5)) for i in range(self.width)] for j in range(self.height)]
+        else:
+            return [[choice(range(4)) for i in range(self.width)] for j in range(self.height)]
+		
 
 
     def get_fields(self, x, y):
@@ -98,11 +105,8 @@ class Game():
             self.canv.delete(text_id)
         fields = self.get_fields(cur_player.x + 1, cur_player.y + 1)
         for f_x, f_y in fields:
-            if sea:
-                self.paint_cell(f_x, f_y, 4)
-                self.game[cur_player.y][cur_player.x] = 4
-            else:
-                self.paint_cell(f_x, f_y, self.game[(f_y - 1) % self.width][(f_x - 1) % self.height])
+            self.paint_cell(f_x, f_y, 4)
+            self.game[cur_player.y][cur_player.x] = 4
 
     def check_turn(self, code):
         if (code < 37 and code > 40):
