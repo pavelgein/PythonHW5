@@ -1,6 +1,6 @@
 import tkinter as tk
-from labirinth import *
-from field import Field
+from .labirinth import *
+from .field import Field
 import sys
 
 
