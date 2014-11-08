@@ -82,9 +82,9 @@ class TkGame(game.Game):
                     show_win_message(self.players[self.get_next_player()])
                 exit()
 
-            if self.check_win():
+            if self.check_win() != None:
                 self.window.destroy()
-                show_win_message(cur_player)
+                show_win_message(self.players[self.check_win()])
                 exit()
 
             for text_id in self.cur_exit.text_id:
@@ -97,14 +97,14 @@ class TkGame(game.Game):
             if self.check_lose():
                 self.window.destroy()
                 if self.number_players == 1:
-                    show_lose_message(current_player)
+                    show_lose_message(cur_player)
                 else: 
                     show_win_message(self.players[self.get_next_player()])
                 exit()
                 
-            if self.check_win():
+            if self.check_win() != None:
                 self.window.destroy()
-                show_win_message(self.players[self.get_next_player()])
+                show_win_message(self.players[self.check_win()])
                 exit()
 
             self.set_next_player()

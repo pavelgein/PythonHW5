@@ -64,8 +64,6 @@ class Game():
             return [[choice(range(4)) for i in range(self.width)] for j in range(self.height)]
 		
 
-
-
     def fx(self, field):
         if self.game[field.y][field.x] == 0:
             return -1
@@ -82,11 +80,6 @@ class Game():
 
     def empty_cell(self, x, y):
         return all(x != player.x or y != player.y for player in self.players)
-
-    def start(self):
-        self.first_paint()
-        self.window.bind("<KeyPress>", self.repaint)
-        self.window.mainloop()
 
     def check_turn(self, code):
         if (code < 37 and code > 40):
@@ -113,13 +106,12 @@ class Game():
         self.cur_exit.x = (self.cur_exit.x + self.fx(cur_player)) % self.width
         self.cur_exit.y = (self.cur_exit.y + self.fy(cur_player)) % self.height
 
-    
 
     def check_win(self):
         for player in self.players:
             if self.cur_exit.x == player.x and self.cur_exit.y == player.y:
-                return True
-        return False
+                return player.id
+        return None
 
     def check_lose(self):
         for player in self.players:
