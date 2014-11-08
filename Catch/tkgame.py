@@ -55,6 +55,18 @@ class TkGame(game.Game):
             self.paint_cell(f_x, f_y, 4)
             self.game[cur_player.y][cur_player.x] = 4
 
+    def get_fields(self, x, y):
+        x %= self.width
+        y %= self.height
+        ans = [(x, y)]
+        if x <= 1:
+            ans.append((x + self.width, y))
+        if y <= 1:
+            ans.append((x, y + self.height))
+        if x <= 1 and y <= 1:
+            ans.append((x + self.width, y + self.height))
+        return ans        
+
     def repaint(self, event):
         cur_player = self.current_player
         if self.check_turn(event.keycode):        
@@ -85,14 +97,14 @@ class TkGame(game.Game):
             if self.check_lose():
                 self.window.destroy()
                 if self.number_players == 1:
-                    show_lose_message(self.players[(cur_player.id + 1 ) % 2])
+                    show_lose_message(current_player)
                 else: 
-                    show_win_message(self.players[(cur_player.id + 1 ) % 2])
+                    show_win_message(self.players[self.get_next_player()])
                 exit()
                 
             if self.check_win():
                 self.window.destroy()
-                show_win_message(self.players[(cur_player.id + 1 ) % 2])
+                show_win_message(self.players[self.get_next_player()])
                 exit()
 
             self.set_next_player()

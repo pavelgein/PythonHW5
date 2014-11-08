@@ -65,17 +65,6 @@ class Game():
 		
 
 
-    def get_fields(self, x, y):
-        x %= self.width
-        y %= self.height
-        ans = [(x, y)]
-        if x <= 1:
-            ans.append((x + self.width, y))
-        if y <= 1:
-            ans.append((x, y + self.height))
-        if x <= 1 and y <= 1:
-            ans.append((x + self.width, y + self.height))
-        return ans
 
     def fx(self, field):
         if self.game[field.y][field.x] == 0:
@@ -98,15 +87,6 @@ class Game():
         self.first_paint()
         self.window.bind("<KeyPress>", self.repaint)
         self.window.mainloop()
-
-    def repaint_cell(self):
-        cur_player = self.current_player
-        for text_id in cur_player.text_id:
-            self.canv.delete(text_id)
-        fields = self.get_fields(cur_player.x + 1, cur_player.y + 1)
-        for f_x, f_y in fields:
-            self.paint_cell(f_x, f_y, 4)
-            self.game[cur_player.y][cur_player.x] = 4
 
     def check_turn(self, code):
         if (code < 37 and code > 40):
@@ -165,8 +145,3 @@ if __name__ == '__main__':
     game = Game()
     game.start()
   
-
-# game = Game()
-# game.start()
-
-
