@@ -56,7 +56,7 @@ class TkGame(game.Game):
             self.game[cur_player.y][cur_player.x] = 4
 
     def repaint(self, event):
-        
+        cur_player = self.current_player
         if self.check_turn(event.keycode):        
             self.repaint_cell()
             self.make_turn(event.keycode)   
