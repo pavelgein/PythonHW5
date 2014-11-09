@@ -18,16 +18,14 @@ class Field():
         self.y = y
 
 class Player():
-    def __init__(self, field, char = None, name = None, pl_id = None):
+    def __init__(self, field, pl_id = None):
         self.x = field.x
         self.y = field.y
-        self.char = char
-        self.name = name
         self.id = pl_id
 
 
 class Game():
-    def __init__(self, number_players = 2, names = ['1', '2'], chars = ['1', '2'], height = 3, width = 30, sea = 0):
+    def __init__(self, number_players = 2, height = 3, width = 30, sea = 0):
         self.sea = sea
         self.height = height
         self.width = width
@@ -36,7 +34,7 @@ class Game():
         
         self.number_players = number_players
         self.players = []
-        self.players = [Player(field = self.gen_good(), char = chars[i], name = names[i], pl_id = i) for i in range(number_players)]
+        self.players = [Player(field = self.gen_good(), pl_id = i) for i in range(number_players)]
         self.current_player = self.players[0]
 
         self.cur_exit = self.gen_good()
