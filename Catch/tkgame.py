@@ -31,7 +31,7 @@ class TkGame(game.Game):
 		self.board = self.create_board()
 		for i in range(number_players):
 			self.players[i].char = chars[i]
-			self.players[i].names = names[i]
+			self.players[i].name = names[i]
 
 
 	def init_graphics(self):
@@ -58,7 +58,7 @@ class TkGame(game.Game):
 		fields = self.get_fields(cur_player.x + 1, cur_player.y + 1)
 		for f_x, f_y in fields:
 			self.paint_cell(f_x, f_y, 4)
-			self.game[cur_player.y][cur_player.x] = 4
+			
 
 	def get_fields(self, x, y):
 		x %= self.width
@@ -75,41 +75,19 @@ class TkGame(game.Game):
 	def repaint(self, event):
 		cur_player = self.current_player
 		if self.check_turn(event.keycode):        
-			self.repaint_cell()
-			self.make_turn(event.keycode)   
-			self.paint_all_start_field()
-
-			if self.check_lose():
-				self.window.destroy()
-				if self.number_players == 1:
-					show_lose_message(cur_player)
-				else: 
-					show_win_message(self.players[self.get_next_player()])
-				exit()
-
-			if self.check_win() != None:
-				self.window.destroy()
-				show_win_message(self.players[self.check_win()])
-				exit()
-
+			self.repaint_cell()			
 			for text_id in self.cur_exit.text_id:
-				self.canv.delete(text_id)
-
-			
-			self.move_exit()
+				self.canv.delete(text_id)			
+			self.make_turn(event.keycode)
+			self.paint_all_start_field()
 			self.paint_exit_field()
 			
-			if self.check_lose():
+			if self.winner != None:
 				self.window.destroy()
-				if self.number_players == 1:
+				if self.number_players == 1 and self.loser == True:
 					show_lose_message(cur_player)
-				else: 
-					show_win_message(self.players[self.get_next_player()])
-				exit()
-				
-			if self.check_win() != None:
-				self.window.destroy()
-				show_win_message(self.players[self.check_win()])
+				else:
+					show_win_message(self.players[self.winner])
 				exit()
 
 			self.set_next_player()

@@ -39,6 +39,8 @@ class Game():
 
         self.cur_exit = self.gen_good()
 
+        self.winner = None
+        self.loser = False
 
 
     def get_next_player(self):
@@ -93,9 +95,21 @@ class Game():
         cur_player = self.current_player
         target_x = (cur_player.x + dx(code)) % self.width
         target_y = (cur_player.y + dy(code)) % self.height
+
         if self.empty_cell(target_x, target_y):
+            self.game[cur_player.y][cur_player.x] = 4
             cur_player.x = target_x
             cur_player.y = target_y
+            self.current_player = cur_player
+            self.winner = self.check_win()
+            if self.winner != None:
+                return True
+            self.move_exit()
+            self.loser = self.check_lose()
+            if self.loser != False:
+                self.winner = self.get_next_player()
+                return True
+            self.winner = self.check_win()
             return True
         return False
 
@@ -112,10 +126,12 @@ class Game():
         return None
 
     def check_lose(self):
-        for player in self.players:
-            if self.game[self.cur_exit.y][self.cur_exit.x] == 4 or self.game[player.y][player.x] == 4:
-                return True
-        return False
+        return self.game[self.cur_exit.y][self.cur_exit.x] == 4 or any(self.game[player.y][player.x] == 4 for player in self.players)
+
+        # for player in self.players:
+        #     if self.game[self.cur_exit.y][self.cur_exit.x] == 4 or self.game[player.y][player.x] == 4:
+        #         return True
+        # return False
    
 def dx(key_code):
     if key_code == 39:
