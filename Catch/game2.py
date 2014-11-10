@@ -128,11 +128,7 @@ class Game():
     def check_lose(self):
         return self.game[self.cur_exit.y][self.cur_exit.x] == 4 or any(self.game[player.y][player.x] == 4 for player in self.players)
 
-        # for player in self.players:
-        #     if self.game[self.cur_exit.y][self.cur_exit.x] == 4 or self.game[player.y][player.x] == 4:
-        #         return True
-        # return False
-   
+  
 def dx(key_code):
     if key_code == 39:
         return 1
