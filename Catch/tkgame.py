@@ -44,7 +44,7 @@ class TkGame(game.Game):
 		return root, canv
 
 	def create_board(self):
-		return [[None for i in range(self.width + 2)] for j in range(self.height + 2)]    
+		return [[None for i in range(self.width + 2)] for j in range(self.height + 2)]
 
 	def start(self):
 		self.first_paint()
@@ -58,7 +58,7 @@ class TkGame(game.Game):
 		fields = self.get_fields(cur_player.x + 1, cur_player.y + 1)
 		for f_x, f_y in fields:
 			self.paint_cell(f_x, f_y, 4)
-			
+
 
 	def get_fields(self, x, y):
 		x %= self.width
@@ -70,18 +70,18 @@ class TkGame(game.Game):
 			ans.append((x, y + self.height))
 		if x <= 1 and y <= 1:
 			ans.append((x + self.width, y + self.height))
-		return ans        
+		return ans
 
 	def repaint(self, event):
 		cur_player = self.current_player
-		if self.check_turn(event.keycode):        
-			self.repaint_cell()			
+		if self.check_turn(event.keycode):
+			self.repaint_cell()
 			for text_id in self.cur_exit.text_id:
-				self.canv.delete(text_id)			
+				self.canv.delete(text_id)
 			self.make_turn(event.keycode)
 			self.paint_all_start_field()
 			self.paint_exit_field()
-			
+
 			if self.winner != None:
 				self.window.destroy()
 				if self.number_players == 1 and self.loser == True:
@@ -97,17 +97,17 @@ class TkGame(game.Game):
 																		width = self.size_cell / 6, outline ='black') for f_x, f_y in fields)
 
 	def paint_cell(self, x, y, z):
-		if (x == 0 or y == 0 or x == self.width + 1 or y == self.height + 1): 
+		if (x == 0 or y == 0 or x == self.width + 1 or y == self.height + 1):
 			if z == 4:
-				 self.canv.create_rectangle(self.size_cell * x, self.size_cell * y, self.size_cell + self.size_cell * x, self.size_cell + self.size_cell * y, 
+				 self.canv.create_rectangle(self.size_cell * x, self.size_cell * y, self.size_cell + self.size_cell * x, self.size_cell + self.size_cell * y,
 											fill = 'blue')
 			else:
-				 self.canv.create_rectangle(self.size_cell * x, self.size_cell * y, self.size_cell + self.size_cell * x, self.size_cell + self.size_cell * y, 
+				 self.canv.create_rectangle(self.size_cell * x, self.size_cell * y, self.size_cell + self.size_cell * x, self.size_cell + self.size_cell * y,
 											fill = '#C0C0C0')
 		else:
-			self.canv.create_rectangle(self.size_cell * x, self.size_cell * y, self.size_cell + self.size_cell * x, self.size_cell + self.size_cell * y, 
+			self.canv.create_rectangle(self.size_cell * x, self.size_cell * y, self.size_cell + self.size_cell * x, self.size_cell + self.size_cell * y,
 									   fill = backgrounds[z])
-		self.board[y][x] = self.canv.create_text(self.size_cell * x + self.size_cell / 2, self.size_cell * y + self.size_cell / 2, text = arrows[z], font = self.font) 
+		self.board[y][x] = self.canv.create_text(self.size_cell * x + self.size_cell / 2, self.size_cell * y + self.size_cell / 2, text = arrows[z], font = self.font)
 
 	def paint_all_start_field(self):
 		for player in self.players:
@@ -118,13 +118,13 @@ class TkGame(game.Game):
 		for f_x, f_y in fields:
 			self.canv.delete(self.board[f_y][f_x]) # удаляем стрелку на месте нашего положения
 		player.text_id = [self.canv.create_text(self.size_cell * f_x + self.size_cell / 2,
-												self.size_cell * f_y + self.size_cell / 2, 
+												self.size_cell * f_y + self.size_cell / 2,
 												text = player.char, font = self.font) for f_x, f_y in fields]
 
-	def paint_exit_field(self):   
+	def paint_exit_field(self):
 		fields = self.get_fields(self.cur_exit.x + 1, self.cur_exit.y + 1)
 		self.cur_exit.text_id = [self.canv.create_rectangle(self.size_cell * f_x + 2, self.size_cell * f_y + 2, self.size_cell + self.size_cell * f_x - 2,
-															self.size_cell + self.size_cell * f_y - 2, width = self.size_cell / 6, outline ='red') 
+															self.size_cell + self.size_cell * f_y - 2, width = self.size_cell / 6, outline ='red')
 								for f_x, f_y in fields]
 
 
@@ -135,13 +135,13 @@ class TkGame(game.Game):
 		self.paint_all_start_field()
 		fields = self.get_fields(self.current_player.x + 1, self.current_player.y + 1)
 		self.current_player.text_id.extend(self.canv.create_rectangle(self.size_cell * f_x + 2, self.size_cell * f_y + 2,
-																					   self.size_cell + self.size_cell * f_x - 2, 
+																					   self.size_cell + self.size_cell * f_x - 2,
 																					   self.size_cell + self.size_cell * f_y - 2,
 																					   width = self.size_cell / 6, outline ='black') for f_x, f_y in fields)
 		self.paint_exit_field()
 		self.canv.create_rectangle(self.size_cell, self.size_cell, (self.width + 1) * self.size_cell, (self.height + 1) * self.size_cell, width = self.size_cell / 10)
 
- 
+
 def show_win_message(player):
 	Message('Выиграл ' + player.name)
 

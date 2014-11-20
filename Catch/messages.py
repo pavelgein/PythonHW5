@@ -6,8 +6,8 @@ class Message(tk.Frame):
 		self.pack()
 
 		mes = tk.Label(self, text = message, fg = 'black', font = ("Arial", 16)).pack()
-		self.begin_button = tk.Button(self, text = 'В начало', command = self.start_new, compound = 'left')
-		self.begin_button.pack()
+		# self.begin_button = tk.Button(self, text = 'В начало', command = self.start_new, compound = 'left')
+		# self.begin_button.pack()
 		self.mainloop()
 
 if __name__ == '__main__':
