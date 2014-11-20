@@ -16,7 +16,8 @@ class MainLauncher(tk.Frame):
 				
 
 		def create_widgets(self):
-						self.image = tk.PhotoImage(file='Catch\catch.png')
+						self.imageCatch = tk.PhotoImage(file='Catch\catch.png')
+						self.imageLabirinth = tk.PhotoImage(file='Labirinth\labirinth.png')
 
 						self.LABEL_FOR_LABIRINTH = tk.Label(self, justify='left', 
 															text="Лабиринт.\n\
@@ -26,7 +27,7 @@ class MainLauncher(tk.Frame):
 Игра рассчитана на одного человека.")
 						self.LABEL_FOR_LABIRINTH.grid(row=0,sticky='w')
 						
-						self.LABIRINTH = tk.Button(self,  text=" Играть в Лабиринт", command=self.run_labirinth, image = self.image, compound='left')
+						self.LABIRINTH = tk.Button(self,  text=" Играть в Лабиринт", command=self.run_labirinth, image = self.imageLabirinth, compound='left')
 						self.LABIRINTH.grid(row=1,sticky='w',pady=10)
 
 						self.LABEL_FOR_CATCH = tk.Label(self, justify='left',
@@ -37,7 +38,7 @@ class MainLauncher(tk.Frame):
 Играть можно и одному и вдвоём.")
 						self.LABEL_FOR_CATCH.grid(row=2,sticky='w')
 
-						self.CATCH = tk.Button(self, text=" Играть в Догони", command=self.run_catch, image = self.image, compound='left')
+						self.CATCH = tk.Button(self, text=" Играть в Догони", command=self.run_catch, image = self.imageCatch, compound='left')
 						self.CATCH.grid(row=3,sticky='w',pady=10)
 
 						self.QUIT = tk.Button(self, text="Не будем играть", command=self.master.destroy)
